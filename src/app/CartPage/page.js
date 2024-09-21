@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { GNB } from "../../components/GNB";
 import { GNB_TYPE } from "../../constants/common";
 import { ProductInCart } from "../../components/ProductInCart";
 import { Box } from "../../styles/StyleComponent";
-import { CartContext } from "../../context/CartContext";
+import { useCartStore } from "../../store/CartStore";  // zustand 스토어 가져오기
 
 function CartPage() {
-  const { cart, setCart } = useContext(CartContext);
+  const cart = useCartStore((state) => state.cart);  // zustand에서 cart 가져오기
+  const setCart = useCartStore((state) => state.setCart);  // zustand에서 setCart 가져오기
 
   return (
     <Base>
@@ -39,6 +40,7 @@ export default CartPage;
 const Base = styled.div`
   width: 100%;
 `;
+
 const Inner = styled.div`
   width: 100%;
   display: flex;
@@ -46,6 +48,7 @@ const Inner = styled.div`
   gap: 20px;
   padding: 72px 20px 69px;
 `;
+
 const Text = styled.div`
   font-family: "Pretendard Variable", sans-serif;
   font-size: 20px;

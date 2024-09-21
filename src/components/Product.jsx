@@ -6,37 +6,38 @@ import { Button } from './Button';
 import { useRouter } from 'next/navigation';
 import { PAGE } from '../constants/common';
 import { Box } from '../styles/StyleComponent';
-import { CartContext } from '../context/CartContext';
+import { useCartStore } from '../store/CartStore';  // zustand store 사용
 
 export const Product = ({ product, ...rest }) => {
-    const router = useRouter();
-    const { cart, setCart } = useContext(CartContext);
+  const router = useRouter();
+  const cart = useCartStore((state) => state.cart);  // zustand에서 cart 가져오기
+  const setCart = useCartStore((state) => state.setCart);  // zustand에서 setCart 가져오기
 
-    const handleCart = (product) => {
-        if (cart.find((item) => item.id === product.id)) {
-            alert('이미 장바구니에 추가된 상품입니다.');
-            return;
-        }
-        setCart((prev) => [...prev, product]);
-        alert('장바구니에 추가되었습니다.');
-    };
+  const handleCart = (product) => {
+    if (cart.find((item) => item.id === product.id)) {
+      alert('이미 장바구니에 추가된 상품입니다.');
+      return;
+    }
+    setCart([...cart, product]);
+    alert('장바구니에 추가되었습니다.');
+  };
 
-    return (
-        <Item {...rest}>
-            <Box gap={6}>
-                <Name
-                    dangerouslySetInnerHTML={{
-                        __html: product.name.replace(/\\n/g, '<br/>'),
-                    }}
-                />
-                <Description>{product.description}</Description>
-            </Box>
-            <Box gap={4} style={{ width: 'fit-content' }}>
-                <Button onClick={() => router.push(`${PAGE.PRODUCT}/${product.id}`)}>제품 설명 보기</Button>
-                <Button onClick={() => handleCart(product)}>장바구니 담기</Button>
-            </Box>
-        </Item>
-    );
+  return (
+    <Item {...rest}>
+      <Box gap={6}>
+        <Name
+          dangerouslySetInnerHTML={{
+            __html: product.name.replace(/\\n/g, '<br/>'),
+          }}
+        />
+        <Description>{product.description}</Description>
+      </Box>
+      <Box gap={4} style={{ width: 'fit-content' }}>
+        <Button onClick={() => router.push(`${PAGE.PRODUCT}/${product.id}`)}>제품 설명 보기</Button>
+        <Button onClick={() => handleCart(product)}>장바구니 담기</Button>
+      </Box>
+    </Item>
+  );
 };
 
 const Item = styled.div`
